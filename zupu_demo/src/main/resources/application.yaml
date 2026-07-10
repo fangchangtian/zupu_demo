@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: zupu_demo
+  profiles:
+    active: dev
+  datasource:
+    url: jdbc:mysql://localhost:3306/family_tree?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: ${DB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      connection-test-query: SELECT 1
+      initialization-fail-timeout: 3000
+
+jwt:
+  secret: ${JWT_SECRET:zupu-demo-default-secret-key-min-256-bits!!}
+  expiration: 604800  # 7 天
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+  global-config:
+    db-config:
+      id-type: auto

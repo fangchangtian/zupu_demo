@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "design-demos",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["serve", "_temp/design-demos", "-p", "3456"],
+      "port": 3456
+    },
+    {
+      "name": "zupu-demo",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["serve", "zupu_demo/src/main/resources/static", "-p", "8088"],
+      "port": 8088
+    }
+  ]
+}

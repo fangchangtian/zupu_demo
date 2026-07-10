@@ -980,6 +980,7 @@ function getAgeText(m) {
 let treeViewMode = 'full';        // 'full' | 'ancestor' | 'descendant' | 'relation'
 let focusPersonId = null;         // 当前关注的人（祖先/后代/关系模式）
 let fullRootId = null;            // 全族模式根节点
+let expandedIds = new Set();      // 全族模式：用户手动展开的节点（在第5代截止线上继续展示其子节点）
 let highlightIds = new Set();     // 关系路径高亮节点
 let highlightLinks = new Map();   // 关系路径高亮连线: "parentId->childId" -> true
 
@@ -1122,16 +1123,22 @@ function buildDescendantTree(memberId, maxGens = 5) {
 }
 
 // 全族模式树：以 rootId 为根，展示全部后代（无深度限制）
-function buildFullTree(rootId) {
+function buildFullTree(rootId, maxDepth = 5) {
   const m = getMember(rootId);
   if (!m) return null;
 
   highlightIds.clear();
 
-  function buildNode(mid) {
+  const rootGen = m.generationOrder || 1;       // 根节点实际代数
+  const maxGen = rootGen + maxDepth - 1;        // 最大展示到的代数（含根节点共 maxDepth 代）
+
+  // depth: 当前成员的实际代数
+  function buildNode(mid, depth) {
     const mem = getMember(mid);
     if (!mem) return null;
     const node = makeNode(mem);
+
+    if (depth >= maxGen && !expandedIds.has(mid)) return node;
 
     if (mem.gender === 'M') {
       const spouse = getSpouse(mid);
@@ -1144,7 +1151,7 @@ function buildFullTree(rootId) {
     const children = getChildren(mid);
     const childNodes = [];
     for (const c of children) {
-      const cn = buildNode(c.id);
+      const cn = buildNode(c.id, depth + 1);
       if (cn) childNodes.push(cn);
     }
     if (childNodes.length > 0) {
@@ -1154,7 +1161,7 @@ function buildFullTree(rootId) {
     return node;
   }
 
-  return buildNode(rootId);
+  return buildNode(rootId, rootGen);
 }
 
 // 全族树（原始递归，无深度限制，用于完整森林）
@@ -1228,7 +1235,6 @@ function makeNode(m, extra = {}) {
       shadowColor: isHighlighted ? 'rgba(232,168,32,0.5)' : 'transparent',
     },
     symbolSize: isHighlighted ? 16 : 14,
-    collapsed: !isHighlighted && m.generationOrder >= 4,
     ...extra,
   };
 }
@@ -1372,8 +1378,13 @@ function renderTree() {
   treeChart.on('click', function(params) {
     if (params.data && params.data.value && params.data.value.id) {
       const id = params.data.value.id;
-      // 全族模式：点击树中节点仅更新详情，不改变根节点
+      // 全族模式：点击树中节点
       if (treeViewMode === 'full') {
+        // 如果该节点有后代且尚未展开 → 展开下一层，不改变根节点
+        if (getChildren(id).length > 0 && !expandedIds.has(id)) {
+          expandedIds.add(id);
+          renderTree();
+        }
         selectMember(id, { changeRoot: false });
       } else {
         selectMember(id);
@@ -1604,6 +1615,7 @@ function selectMember(id, opts = {}) {
   if (treeViewMode === 'full' && opts.changeRoot !== false) {
     if (fullRootId !== id) {
       fullRootId = id;
+      expandedIds.clear();
       renderTree();
     }
   }
@@ -2142,6 +2154,7 @@ function executeDelete() {
   }
   if (fullRootId === id) {
     fullRootId = findRootMembers()[0]?.id || null;
+    expandedIds.clear();
   }
   if (currentEditId === id) currentEditId = null;
 
@@ -2407,6 +2420,13 @@ function refreshAll() {
 function init() {
   initMemberMap();
   renderMemberList();
+
+  // 默认选中始祖，全族模式以始祖为根（必须在 initTreeChart 之前设置，确保首次渲染使用 buildFullTree）
+  const root = findRootMembers()[0];
+  if (root) {
+    fullRootId = root.id;
+  }
+
   initTreeChart();
   populateRelSelects();
 
@@ -2414,10 +2434,8 @@ function init() {
   document.getElementById('familyInfo').textContent =
     `${mockFamily.name} · ${mockFamily.generationCount}代 · ${mockMembers.length}人`;
 
-  // 默认选中始祖，全族模式以始祖为根
-  const root = findRootMembers()[0];
+  // 选中始祖以更新详情面板
   if (root) {
-    fullRootId = root.id;
     selectMember(root.id);
   }
   updateToolbarButtons();

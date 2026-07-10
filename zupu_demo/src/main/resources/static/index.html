@@ -1409,15 +1409,15 @@ function buildRelationTree() {
     return Array.isArray(d) ? d : [d];
   }
 
-  // 收集 A 的祖先链（含自己）
+  // 收集 A 的祖先链（含自己），外来配偶通过丈夫接入
   const aPath = [aId];
-  let cur = a.fatherId;
-  while (cur) { aPath.push(cur); const p = getMember(cur); cur = p ? p.fatherId : null; }
+  let cur = getParentForPath(a);
+  while (cur) { aPath.push(cur); const p = getMember(cur); cur = p ? getParentForPath(p) : null; }
 
-  // 收集 B 的祖先链（含自己）
+  // 收集 B 的祖先链（含自己），外来配偶通过丈夫接入
   const bPath = [bId];
-  cur = b.fatherId;
-  while (cur) { bPath.push(cur); const p = getMember(cur); cur = p ? p.fatherId : null; }
+  cur = getParentForPath(b);
+  while (cur) { bPath.push(cur); const p = getMember(cur); cur = p ? getParentForPath(p) : null; }
 
   // 找共同祖先
   let lca = null, lcaIdxA = -1, lcaIdxB = -1;
@@ -1462,9 +1462,24 @@ function buildRelationTree() {
       const spouse = getSpouse(mid);
       if (spouse) {
         node.children = node.children || [];
-        node.children.push(makeSpouseNode(spouse));
+        const sNode = makeSpouseNode(spouse);
+        // 如果配偶是 A 或 B，加上标签
+        if (spouse.id === aId) {
+          sNode.name = sNode.name + '\n👤 A';
+        }
+        if (spouse.id === bId) {
+          sNode.name = sNode.name + '\n👤 B';
+        }
+        if (spouse.id === lca) {
+          sNode.name = sNode.name + '\n🏠 共同祖先';
+        }
+        node.children.push(sNode);
       }
     }
+
+    // 也检查当前成员自己（对女性成员），通过父亲向下的路径不够
+    // 需要将外来配偶的丈夫也纳入 pathSet 以确保路径完整
+    const spouseId = isExternalSpouse(m) ? getParentForPath(m) : null;
 
     const children = getChildren(mid);
     const childNodes = [];
@@ -1473,6 +1488,8 @@ function buildRelationTree() {
       const cn = buildPathTree(c.id, visited);
       if (cn) childNodes.push(cn);
     }
+    // 如果当前节点是外来配偶的丈夫，且那些配偶在 pathSet 中
+    // 此时孩子列表应该也包含配偶（已经通过前面的 getSpouse 处理）
     if (childNodes.length > 0) {
       node.children = (node.children || []).concat(childNodes);
     }
@@ -1778,6 +1795,30 @@ function calculateRelation() {
   selectMember(aId);
 }
 
+// 获取路径查找时的"逻辑父节点"：
+// 普通成员返回 fatherId，外来配偶（女，无 fatherId）返回丈夫 ID
+function getParentForPath(member) {
+  if (!member) return null;
+  if (member.fatherId) return member.fatherId;
+  // 检查是否为外来配偶（妻子），通过婚姻关系连接到家族
+  if (member.gender === 'F') {
+    for (const s of mockSpouses) {
+      if (s.wifeId === member.id) return s.husbandId;
+    }
+  }
+  return null;
+}
+
+// 检查成员是否为外来配偶
+function isExternalSpouse(member) {
+  if (!member || member.gender !== 'F') return false;
+  if (member.fatherId) return false;
+  for (const s of mockSpouses) {
+    if (s.wifeId === member.id) return true;
+  }
+  return false;
+}
+
 function calcRelation(aId, bId) {
   const a = getMember(aId);
   const b = getMember(bId);
@@ -1785,16 +1826,22 @@ function calcRelation(aId, bId) {
   if (aId === bId) return '本人';
   if (a.familyId !== b.familyId) return '非同族成员';
 
-  // 收集 A 的祖先链
+  // 检测是否为配偶关系
+  for (const s of mockSpouses) {
+    if ((s.husbandId === aId && s.wifeId === bId)) return a.gender === 'M' ? '配偶（妻）' : '配偶（夫）';
+    if ((s.wifeId === aId && s.husbandId === bId)) return a.gender === 'F' ? '配偶（夫）' : '配偶（妻）';
+  }
+
+  // 收集 A 的祖先链（含自己），外来配偶通过丈夫接入
   const aAncestors = [];
-  let cur = a.fatherId;
+  let cur = getParentForPath(a);
   while (cur) {
     aAncestors.push(cur);
     const p = getMember(cur);
-    cur = p ? p.fatherId : null;
+    cur = p ? getParentForPath(p) : null;
   }
 
-  // 检查直系
+  // 检查直系（A 是 B 的直系后代）
   if (aAncestors.includes(bId)) {
     const delta = a.generationOrder - b.generationOrder;
     return delta === 1 ? '父亲' :
@@ -1803,13 +1850,13 @@ function calcRelation(aId, bId) {
            '上' + delta + '代直系长辈';
   }
 
-  // B 的祖先
+  // B 的祖先链（含自己），外来配偶通过丈夫接入
   const bAncestors = [];
-  let bCur = b.fatherId;
+  let bCur = getParentForPath(b);
   while (bCur) {
     bAncestors.push(bCur);
     const p = getMember(bCur);
-    bCur = p ? p.fatherId : null;
+    bCur = p ? getParentForPath(p) : null;
   }
 
   if (bAncestors.includes(aId)) {
@@ -1820,7 +1867,30 @@ function calcRelation(aId, bId) {
            '下' + delta + '代直系后代';
   }
 
-  // 找共同祖先
+  // 检查 A 是不是通过配偶关系成为 B 的直系长辈/后代
+  // 例如 A 是外来配偶，她通过丈夫的祖先链可能包含 B
+  if (isExternalSpouse(a)) {
+    const husband = getMember(getParentForPath(a));
+    if (husband && husband.id === bId) return '配偶（妻）';
+    if (husband && bAncestors.includes(husband.id)) {
+      const hDelta = husband.generationOrder - b.generationOrder;
+      return hDelta === 0 ? '配偶（妯娌关系）'
+           : hDelta > 0 ? '儿媳等/晚辈配偶'
+           : '婆婆等/长辈配偶';
+    }
+  }
+  if (isExternalSpouse(b)) {
+    const husband = getMember(getParentForPath(b));
+    if (husband && husband.id === aId) return '配偶（妻）';
+    if (husband && aAncestors.includes(husband.id)) {
+      const hDelta = a.generationOrder - husband.generationOrder;
+      return hDelta === 0 ? '配偶（连襟关系）'
+           : hDelta > 0 ? '儿媳等/晚辈配偶'
+           : '婆婆等/长辈配偶';
+    }
+  }
+
+  // 找共同祖先（沿着配偶路由后的路径）
   let commonAncestor = null;
   let bDist = 0;
   bCur = b.id;
@@ -1831,7 +1901,7 @@ function calcRelation(aId, bId) {
     }
     bDist++;
     const p = getMember(bCur);
-    bCur = p ? p.fatherId : null;
+    bCur = p ? getParentForPath(p) : null;
   }
 
   if (!commonAncestor) return '同族远亲';
@@ -1844,7 +1914,6 @@ function calcRelation(aId, bId) {
   // 同辈
   if (aDist === 1 && bDist === 1) {
     if (genDiff === 0) return '亲兄弟姐妹';
-    // 同父但不同代 → 不太可能，简单处理
   }
 
   // 父辈（A 比 B 高一辈）

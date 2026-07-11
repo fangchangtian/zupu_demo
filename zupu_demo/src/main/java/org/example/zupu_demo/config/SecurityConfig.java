@@ -27,6 +27,8 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 // 放行注册和登录
                 .requestMatchers("/api/users/register", "/api/users/login").permitAll()
+                // 放行静态资源
+                .requestMatchers("/", "/index.html", "/**.html", "/**.js", "/**.css", "/**.png", "/**.jpg", "/**.svg").permitAll()
                 // 其余接口需要认证
                 .anyRequest().authenticated()
             )

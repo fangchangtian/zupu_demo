@@ -71,6 +71,155 @@ body {
   justify-content: center;
   font-size: 18px;
 }
+
+/* ====== User Profile in Header ====== */
+.header .user-profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  padding: 4px 12px;
+  border-radius: 20px;
+  transition: all 0.2s;
+}
+.header .user-profile:hover {
+  background: rgba(255,255,255,0.1);
+}
+.header .user-profile .user-avatar {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  flex-shrink: 0;
+  overflow: hidden;
+  border: 2px solid rgba(255,255,255,0.3);
+}
+.header .user-profile .user-avatar.male { background: var(--male); }
+.header .user-profile .user-avatar.female { background: var(--female); }
+.header .user-profile .user-avatar img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.header .user-profile .user-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #FBF8F2;
+}
+.header .user-profile .user-gen {
+  font-size: 11px;
+  color: var(--gold-light);
+}
+.header .user-profile .user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+/* ====== User Profile Popover ====== */
+.user-popover-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+}
+.user-popover-overlay.show { display: block; }
+.user-popover {
+  position: fixed;
+  top: 64px;
+  right: 24px;
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+  width: 280px;
+  overflow: hidden;
+  z-index: 9999;
+  animation: popoverIn 0.15s ease-out;
+}
+@keyframes popoverIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.user-popover .popover-header {
+  padding: 16px;
+  background: linear-gradient(135deg, var(--gold-pale), var(--paper));
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.user-popover .popover-header .popover-avatar {
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  overflow: hidden;
+  border: 2px solid var(--card);
+}
+.user-popover .popover-header .popover-avatar.male { background: var(--male); }
+.user-popover .popover-header .popover-avatar.female { background: var(--female); }
+.user-popover .popover-header .popover-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.user-popover .popover-header .popover-name { font-size: 16px; font-weight: 600; color: var(--ink); }
+.user-popover .popover-header .popover-gen { font-size: 12px; color: var(--ink-light); }
+.user-popover .popover-body { padding: 12px 16px; }
+.user-popover .popover-body .popover-field {
+  display: flex;
+  padding: 6px 0;
+  font-size: 13px;
+  border-bottom: 1px solid #F5F0E8;
+}
+.user-popover .popover-body .popover-field:last-child { border-bottom: none; }
+.user-popover .popover-body .popover-field .label {
+  width: 56px;
+  color: var(--ink-light);
+  flex-shrink: 0;
+}
+.user-popover .popover-body .popover-field .value { color: var(--ink); }
+.user-popover .popover-actions {
+  padding: 12px 16px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.user-popover .popover-actions button {
+  width: 100%;
+  padding: 8px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: var(--paper);
+  color: var(--ink-med);
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.user-popover .popover-actions button:hover { border-color: var(--gold); color: var(--gold); }
+.user-popover .popover-actions button.primary {
+  background: var(--gold);
+  color: #fff;
+  border-color: var(--gold);
+}
+.user-popover .popover-actions button.spouse {
+  color: var(--rose);
+  border-color: var(--rose-light);
+}
+.user-popover .popover-actions button.spouse:hover {
+  background: var(--rose);
+  color: #fff;
+  border-color: var(--rose);
+}
 .header nav { display: flex; gap: 4px; }
 .header nav button {
   background: rgba(255,255,255,0.08);
@@ -110,35 +259,54 @@ body {
   flex-shrink: 0;
 }
 .sidebar-header {
-  padding: 16px;
+  padding: 18px 16px;
   border-bottom: 1px solid var(--border);
+  background: linear-gradient(135deg, var(--gold-pale) 0%, var(--card) 100%);
 }
 .sidebar-header h3 {
-  font-size: 15px;
-  margin-bottom: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 12px;
   color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.sidebar-header h3::before {
+  content: '';
+  width: 4px;
+  height: 18px;
+  background: linear-gradient(180deg, var(--gold) 0%, var(--gold-light) 100%);
+  border-radius: 2px;
 }
 .search-box {
   position: relative;
 }
 .search-box input {
   width: 100%;
-  padding: 8px 12px 8px 34px;
+  padding: 10px 14px 10px 38px;
   border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
+  border-radius: 10px;
   font-size: 13px;
-  background: var(--paper);
+  background: var(--card);
   color: var(--ink);
   outline: none;
-  transition: border-color 0.2s;
+  transition: all 0.2s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
 }
-.search-box input:focus { border-color: var(--gold); }
+.search-box input:focus { 
+  border-color: var(--gold); 
+  box-shadow: 0 0 0 3px rgba(184,134,11,0.1);
+}
+.search-box input::placeholder {
+  color: var(--ink-light);
+}
 .search-box .search-icon {
   position: absolute;
-  left: 10px; top: 50%;
+  left: 12px; top: 50%;
   transform: translateY(-50%);
   color: var(--ink-light);
-  font-size: 14px;
+  font-size: 15px;
 }
 .member-list {
   flex: 1;
@@ -167,9 +335,16 @@ body {
   font-weight: 600;
   color: #fff;
   flex-shrink: 0;
+  overflow: hidden;
 }
 .member-item .avatar.male { background: var(--male); }
 .member-item .avatar.female { background: var(--female); }
+.member-item .avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
 .member-item .info { flex:1; min-width:0; }
 .member-item .info .name { font-size:14px; font-weight:500; }
 .member-item .info .meta {
@@ -226,10 +401,25 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 20px;
+  padding: 12px 20px;
   border-bottom: 1px solid var(--border);
-  background: var(--card);
+  background: linear-gradient(135deg, var(--card) 0%, var(--gold-pale) 100%);
   flex-shrink: 0;
+}
+.tree-toolbar .title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-right: 12px;
+}
+.tree-toolbar .title::after {
+  content: '';
+  width: 1px;
+  height: 18px;
+  background: var(--border);
 }
 .tree-toolbar .sep {
   width: 1px; height: 20px;
@@ -285,14 +475,20 @@ body {
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 .detail-header {
-  padding: 16px;
+  padding: 14px 16px;
   border-bottom: 1px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  background: var(--card);
+  z-index: 5;
 }
 .detail-header h3 { font-size: 15px; }
 .detail-header .close-btn {
@@ -300,7 +496,7 @@ body {
   font-size: 18px; cursor: pointer;
   color: var(--ink-light);
 }
-.detail-body { padding: 16px; overflow-y: auto; flex: 1; }
+.detail-body { padding: 16px; flex-shrink: 0; }
 .detail-body .big-avatar {
   width: 72px; height: 72px;
   border-radius: 50%;
@@ -311,9 +507,17 @@ body {
   font-weight: 700;
   color: #fff;
   margin: 0 auto 16px;
+  overflow: hidden;
+  flex-shrink: 0;
 }
 .detail-body .big-avatar.male { background: var(--male); }
 .detail-body .big-avatar.female { background: var(--female); }
+.detail-body .big-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
 .detail-body .field {
   display: flex;
   padding: 8px 0;
@@ -339,8 +543,26 @@ body {
   padding: 12px 16px;
   border-top: 1px solid var(--border);
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 8px;
+}
+.detail-actions .manage-toggle {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 8px; border-radius: var(--radius-sm);
+  font-size: 13px; cursor: pointer;
+  border: 1px solid var(--border); background: var(--paper);
+  color: var(--ink-med); transition: all 0.15s;
+}
+.detail-actions .manage-toggle:hover { border-color: var(--gold); color: var(--gold); }
+.detail-actions .manage-toggle.active { background: var(--gold-pale); border-color: var(--gold); color: var(--ink); }
+.detail-actions .action-btns {
+  display: none; flex-direction: column; gap: 8px;
+  animation: expandDown 0.18s ease-out;
+}
+.detail-actions.managing .action-btns { display: flex; }
+@keyframes expandDown {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 .detail-actions button {
   flex: 1 1 auto;
@@ -378,6 +600,105 @@ body {
   background: var(--rose);
   color: #fff;
   border-color: var(--rose);
+}
+
+/* Detail big-avatar clickable */
+.detail-body .big-avatar {
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.detail-body .big-avatar:hover {
+  transform: scale(1.06);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+}
+
+/* ====== Member Profile Dialog ====== */
+.profile-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 9999;
+  justify-content: center; align-items: center;
+}
+.profile-overlay.show { display: flex; }
+.profile-dialog {
+  background: var(--card);
+  border-radius: 12px;
+  width: 520px; max-width: 92vw; max-height: 86vh;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+  display: flex; flex-direction: column;
+  animation: profileIn 0.2s ease-out;
+}
+@keyframes profileIn {
+  from { opacity: 0; transform: scale(0.92) translateY(10px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+.profile-header {
+  background: linear-gradient(135deg, var(--gold-pale), var(--paper));
+  padding: 28px 24px 20px;
+  display: flex; gap: 18px; align-items: center;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+.profile-header .profile-avatar {
+  width: 84px; height: 84px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 32px; font-weight: 700; color: #fff;
+  overflow: hidden; flex-shrink: 0;
+  border: 3px solid var(--card);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+.profile-header .profile-avatar.male { background: var(--male); }
+.profile-header .profile-avatar.female { background: var(--female); }
+.profile-header .profile-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.profile-header .profile-name { font-size: 22px; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
+.profile-header .profile-sub { font-size: 13px; color: var(--ink-med); display: flex; gap: 8px; flex-wrap: wrap; }
+.profile-header .profile-sub .tag {
+  display: inline-flex; align-items: center; gap: 3px;
+  padding: 2px 10px; border-radius: 10px;
+  background: var(--card); font-size: 12px; color: var(--ink-med);
+  border: 1px solid var(--border);
+}
+.profile-close {
+  position: absolute; top: 14px; right: 16px;
+  width: 28px; height: 28px;
+  border-radius: 50%; border: none;
+  background: rgba(255,255,255,0.7);
+  font-size: 16px; cursor: pointer; color: var(--ink-light);
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s;
+}
+.profile-close:hover { background: var(--card); color: var(--ink); }
+.profile-body { padding: 20px 24px; overflow-y: auto; flex: 1; }
+.profile-body .profile-section { margin-bottom: 18px; }
+.profile-body .profile-section-title {
+  font-size: 13px; font-weight: 600; color: var(--gold);
+  margin-bottom: 8px; display: flex; align-items: center; gap: 6px;
+}
+.profile-body .profile-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 10px 20px;
+}
+.profile-body .profile-item {
+  display: flex; flex-direction: column; gap: 2px;
+}
+.profile-body .profile-item .pi-label {
+  font-size: 11px; color: var(--ink-light);
+}
+.profile-body .profile-item .pi-value {
+  font-size: 14px; color: var(--ink);
+}
+.profile-body .profile-item .pi-value a {
+  color: var(--gold); text-decoration: none;
+}
+.profile-body .profile-item .pi-value a:hover { text-decoration: underline; }
+.profile-body .profile-bio {
+  background: var(--paper); border-radius: 8px;
+  padding: 14px 16px; font-size: 14px; line-height: 1.9;
+  color: var(--ink-med); border-left: 3px solid var(--gold);
+  white-space: pre-wrap;
 }
 
 /* Delete confirm dialog */
@@ -495,7 +816,8 @@ body {
 }
 .rule-card .rule-title { font-size: 15px; font-weight: 600; margin-bottom: 6px; display: flex; align-items: center; gap: 10px; }
 .rule-card .rule-content { font-size: 14px; color: var(--ink-med); line-height: 1.9; white-space: pre-wrap; }
-.rule-card .rule-actions { display: flex; gap: 6px; margin-left: auto; }
+.rule-card .rule-actions { display: none; gap: 6px; margin-left: auto; }
+.rules-managing .rule-card .rule-actions { display: flex; }
 .rule-card .rule-actions button {
   background: none; border: 1px solid var(--border); border-radius: 4px;
   font-size: 12px; padding: 2px 8px; cursor: pointer; color: var(--ink-light);
@@ -533,13 +855,24 @@ body {
 }
 
 .add-rule-btn {
-  display: inline-flex; align-items: center; gap: 6px;
+  display: none; align-items: center; gap: 6px;
   padding: 10px 20px; border-radius: var(--radius-sm);
   font-size: 14px; cursor: pointer; margin-bottom: 20px;
   border: 2px dashed var(--border); background: var(--card);
   color: var(--ink-med); transition: all 0.15s;
 }
 .add-rule-btn:hover { border-color: var(--gold); color: var(--gold); }
+.rules-managing .add-rule-btn { display: inline-flex; }
+
+.manage-rule-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 18px; border-radius: var(--radius-sm);
+  font-size: 13px; cursor: pointer;
+  border: 1px solid var(--border); background: var(--card);
+  color: var(--ink-med); transition: all 0.15s;
+}
+.manage-rule-btn:hover { border-color: var(--gold); color: var(--gold); }
+.manage-rule-btn.active { background: var(--gold-pale); border-color: var(--gold); color: var(--ink); }
 
 /* ====== Modal ====== */
 .modal-overlay {
@@ -620,6 +953,198 @@ body {
 }
 .modal-footer .confirm:hover { background: #9E7209; }
 
+/* ====== Avatar Uploader ====== */
+.avatar-upload {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+  padding: 14px;
+  background: var(--paper);
+  border-radius: var(--radius-sm);
+  border: 1px dashed var(--border);
+}
+.avatar-upload .preview {
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+  border: 2px solid var(--card);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.avatar-upload .preview.male { background: var(--male); }
+.avatar-upload .preview.female { background: var(--female); }
+.avatar-upload .preview img {
+  width: 100%; height: 100%;
+  object-fit: cover; display: block;
+}
+.avatar-upload .uploader-info { flex: 1; }
+.avatar-upload .uploader-info .title {
+  font-size: 13px; font-weight: 600;
+  color: var(--ink); margin-bottom: 4px;
+}
+.avatar-upload .uploader-info .hint {
+  font-size: 11px; color: var(--ink-light);
+}
+.avatar-upload .uploader-btns { display: flex; flex-direction: column; gap: 6px; }
+.avatar-upload .upload-btn {
+  padding: 6px 12px;
+  font-size: 12px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  color: var(--ink-med);
+  transition: all 0.15s;
+}
+.avatar-upload .upload-btn:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+.avatar-upload .upload-btn.danger {
+  color: var(--rose);
+  border-color: var(--rose-light);
+}
+.avatar-upload .upload-btn.danger:hover {
+  background: var(--rose);
+  color: #fff;
+  border-color: var(--rose);
+}
+.avatar-upload input[type="file"] { display: none; }
+
+/* ====== Searchable Select ====== */
+.searchable-select {
+  position: relative;
+}
+.searchable-select input {
+  width: 100%;
+  padding: 8px 30px 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  background: var(--paper);
+  color: var(--ink);
+  outline: none;
+  font-family: inherit;
+  cursor: pointer;
+}
+.searchable-select input:focus { border-color: var(--gold); }
+.searchable-select input::placeholder { color: var(--ink-light); }
+.searchable-select .ss-clear {
+  position: absolute;
+  right: 8px; top: 50%;
+  transform: translateY(-50%);
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: var(--border);
+  color: #fff;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  cursor: pointer;
+  border: none;
+}
+.searchable-select.has-value .ss-clear { display: flex; }
+.searchable-select .ss-clear:hover { background: var(--ink-light); }
+.searchable-select .ss-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0; right: 0;
+  max-height: 200px;
+  overflow-y: auto;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  z-index: 100;
+  display: none;
+}
+.searchable-select .ss-dropdown.show { display: block; }
+.searchable-select .ss-option {
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--ink);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.15s;
+}
+.searchable-select .ss-option:hover { background: var(--gold-pale); }
+.searchable-select .ss-option .ss-gen {
+  font-size: 11px;
+  color: var(--ink-light);
+}
+.searchable-select .ss-option.disabled {
+  color: var(--ink-light);
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+.searchable-select .ss-empty {
+  padding: 16px;
+  text-align: center;
+  color: var(--ink-light);
+  font-size: 12px;
+}
+
+/* ====== Children Editor ====== */
+.children-editor {
+  margin-bottom: 14px;
+}
+.children-editor .ce-label {
+  font-size: 12px;
+  color: var(--ink-med);
+  margin-bottom: 6px;
+}
+.children-editor .ce-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 8px;
+  min-height: 32px;
+  padding: 6px;
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+.children-editor .ce-tag {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px 4px 10px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  font-size: 12px;
+  color: var(--ink);
+}
+.children-editor .ce-tag.male { border-color: var(--male-light); }
+.children-editor .ce-tag.female { border-color: var(--female-light); }
+.children-editor .ce-tag .ce-remove {
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: var(--border);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  cursor: pointer;
+  border: none;
+}
+.children-editor .ce-tag .ce-remove:hover { background: var(--rose); }
+.children-editor .ce-search {
+  position: relative;
+}
+
 /* ====== Scrollbar ====== */
 ::-webkit-scrollbar { width: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
@@ -636,16 +1161,21 @@ body {
 
 <!-- ====== Header ====== -->
 <header class="header">
-  <div class="brand">
-    <div class="icon">🌳</div>
-    族迹 · 电子族谱
-  </div>
+  <!-- 左侧：家族信息 -->
+  <span class="info-badge" id="familyInfo">张氏宗谱 · 9代 · 48人</span>
   <nav>
     <button class="active" onclick="switchView('tree')">世系图谱</button>
     <button onclick="switchView('rules')">族规家训</button>
     <button onclick="switchView('logs')">操作日志</button>
   </nav>
-  <span class="info-badge" id="familyInfo">张氏宗谱 · 9代 · 48人</span>
+  <!-- 右侧：登录用户 -->
+  <div class="user-profile" id="headerUser" onclick="toggleUserPopover()">
+    <div class="user-avatar" id="headerAvatar">图</div>
+    <div class="user-info">
+      <div class="user-name" id="headerUserName">加载中...</div>
+      <div class="user-gen" id="headerUserGen"></div>
+    </div>
+  </div>
 </header>
 
 <!-- ====== Main Layout ====== -->
@@ -661,9 +1191,6 @@ body {
       </div>
     </div>
     <div class="member-list" id="memberList"></div>
-    <div class="sidebar-footer">
-      <button onclick="openAddModal()">＋ 添加成员</button>
-    </div>
   </aside>
 
   <!-- Center: Tree -->
@@ -700,10 +1227,13 @@ body {
       </p>
     </div>
     <div class="detail-actions" id="detailActions" style="display:none">
-      <button onclick="editMember()">✏️ 编辑</button>
-      <button class="primary" onclick="openAddChildModal()">＋ 添加子女</button>
-      <button class="spouse" onclick="openAddSpouseModal()">💍 添加配偶</button>
-      <button class="danger" onclick="confirmDeleteMember()">🗑 删除</button>
+      <button class="manage-toggle" id="manageToggle" onclick="toggleDetailManage()">⚙ 管理操作</button>
+      <div class="action-btns">
+        <button onclick="editMember()">✏️ 编辑</button>
+        <button class="primary" onclick="openAddChildModal()">＋ 添加子女</button>
+        <button class="spouse" onclick="openAddSpouseModal()">💍 添加配偶</button>
+        <button class="danger" onclick="confirmDeleteMember()">🗑 删除</button>
+      </div>
     </div>
 
     <!-- Relationship Query -->
@@ -735,6 +1265,19 @@ body {
       <button style="background:none;border:none;font-size:18px;cursor:pointer;color:var(--ink-light)" onclick="closeModal()">✕</button>
     </div>
     <div class="modal-body">
+      <!-- 头像上传 -->
+      <div class="avatar-upload">
+        <div class="preview" id="formAvatarPreview">图</div>
+        <div class="uploader-info">
+          <div class="title">头像</div>
+          <div class="hint">点击右侧按钮上传本地图片<br>支持 JPG/PNG，建议正方形</div>
+        </div>
+        <div class="uploader-btns">
+          <button type="button" class="upload-btn" onclick="document.getElementById('formAvatarFile').click()">📷 上传图片</button>
+          <button type="button" class="upload-btn danger" id="formAvatarReset" onclick="resetAvatar()" style="display:none">↺ 移除头像</button>
+          <input type="file" id="formAvatarFile" accept="image/*" onchange="handleAvatarUpload(event)">
+        </div>
+      </div>
       <div class="form-row">
         <div class="form-group">
           <label>姓名 *</label>
@@ -772,15 +1315,37 @@ body {
       <div class="form-row">
         <div class="form-group">
           <label>父亲</label>
-          <select id="formFather">
-            <option value="">无（始祖）</option>
-          </select>
+          <div class="searchable-select" id="fatherSelect">
+            <input type="text" id="formFather" placeholder="搜索姓名..." autocomplete="off"
+              onfocus="showSearchDropdown('fatherSelect', 'M', 'formFatherHidden')"
+              oninput="filterSearchDropdown('fatherSelect', this.value, 'M', 'formFatherHidden')">
+            <button type="button" class="ss-clear" onclick="clearSearchSelect('fatherSelect', 'formFather', 'formFatherHidden')">✕</button>
+            <div class="ss-dropdown" id="fatherSelectDropdown"></div>
+            <input type="hidden" id="formFatherHidden" value="">
+          </div>
         </div>
         <div class="form-group">
           <label>母亲</label>
-          <select id="formMother">
-            <option value="">无</option>
-          </select>
+          <div class="searchable-select" id="motherSelect">
+            <input type="text" id="formMother" placeholder="搜索姓名..." autocomplete="off"
+              onfocus="showSearchDropdown('motherSelect', 'F', 'formMotherHidden')"
+              oninput="filterSearchDropdown('motherSelect', this.value, 'F', 'formMotherHidden')">
+            <button type="button" class="ss-clear" onclick="clearSearchSelect('motherSelect', 'formMother', 'formMotherHidden')">✕</button>
+            <div class="ss-dropdown" id="motherSelectDropdown"></div>
+            <input type="hidden" id="formMotherHidden" value="">
+          </div>
+        </div>
+      </div>
+      <!-- 子女编辑区域 -->
+      <div class="children-editor" id="childrenEditor">
+        <div class="ce-label">子女</div>
+        <div class="ce-list" id="ceList"></div>
+        <div class="searchable-select ce-search" id="childSelect">
+          <input type="text" id="ceSearchInput" placeholder="搜索子女姓名添加..." autocomplete="off"
+            onfocus="showChildDropdown()"
+            oninput="filterChildDropdown(this.value)">
+          <button type="button" class="ss-clear" onclick="clearChildSearch()">✕</button>
+          <div class="ss-dropdown" id="childDropdown"></div>
         </div>
       </div>
       <div class="form-group">
@@ -809,6 +1374,21 @@ body {
       <button onclick="closeDelDialog()">取消</button>
       <button class="del-confirm" id="delConfirmBtn" onclick="executeDelete()">确认删除</button>
     </div>
+  </div>
+</div>
+
+<!-- ====== Member Profile Dialog ====== -->
+<div class="profile-overlay" id="profileOverlay" onclick="if(event.target===this)closeProfileDialog()">
+  <div class="profile-dialog">
+    <div class="profile-header">
+      <button class="profile-close" onclick="closeProfileDialog()">✕</button>
+      <div class="profile-avatar" id="profileAvatar"></div>
+      <div>
+        <div class="profile-name" id="profileName"></div>
+        <div class="profile-sub" id="profileSub"></div>
+      </div>
+    </div>
+    <div class="profile-body" id="profileBody"></div>
   </div>
 </div>
 
@@ -897,6 +1477,55 @@ const mockMembers = [
   { id: 40, familyId:1, name:'张墨涵',  generationName:'墨', gender:'M', birthDate:'2095-08-25', deathDate:null, isAlive:1, generationOrder:9, fatherId:38, motherId:39, birthPlace:'浙江绍兴', biography:'张翰宇之子。' },
   { id: 48, familyId:1, name:'张墨言',  generationName:'墨', gender:'M', birthDate:'2096-03-18', deathDate:null, isAlive:1, generationOrder:9, fatherId:46, motherId:47, birthPlace:'上海', biography:'张翰林之子。' },
 ];
+
+/** 为所有成员自动生成 SVG 内联头像（按性别、代数差异化，无需外部请求） */
+const avatarPalettes = {
+  elderM: ['#8B6914', '#C9A961', '#F5ECD7'],
+  elderF: ['#A0522D', '#D4A574', '#FAF0E6'],
+  midM:   ['#2F5496', '#5B9BD5', '#E8F0FE'],
+  midF:   ['#7B3F7A', '#C77DBF', '#F4E6F4'],
+  youngM: ['#1E6B4A', '#4CAF82', '#E6F6EE'],
+  youngF: ['#C23A5B', '#F094A8', '#FCE9EE'],
+  childM: ['#1F6FBF', '#60A5FA', '#E0EEFF'],
+  childF: ['#B83280', '#F687B3', '#FFF0F5'],
+};
+function pickAvatarPalette(m) {
+  if (!m.isAlive || m.generationOrder <= 2) return m.gender === 'M' ? 'elderM' : 'elderF';
+  if (m.generationOrder <= 4) return m.gender === 'M' ? 'midM' : 'midF';
+  if (m.generationOrder <= 6) return m.gender === 'M' ? 'youngM' : 'youngF';
+  return m.gender === 'M' ? 'childM' : 'childF';
+}
+function makeDefaultAvatar(m) {
+  const p = avatarPalettes[pickAvatarPalette(m)];
+  const [dark, mid, light] = p;
+  const initial = (m.name || '?').charAt((m.name || '?').length - 1);
+  const gen = m.generationOrder || 1;
+  const bgPattern = m.gender === 'M'
+    ? `<circle cx="50" cy="38" r="18" fill="${light}" opacity="0.6"/>
+       <rect x="20" y="56" width="60" height="34" rx="8" fill="${light}" opacity="0.6"/>`
+    : `<circle cx="50" cy="40" r="16" fill="${light}" opacity="0.6"/>
+       <path d="M20 90 Q20 60 50 55 Q80 60 80 90 Z" fill="${light}" opacity="0.6"/>`;
+  const genText = gen > 0 ? `<text x="50" y="90" text-anchor="middle" font-size="10" fill="${dark}" opacity="0.7" font-family="serif">第${gen}代</text>` : '';
+  const svg = `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+      <defs>
+        <radialGradient id="g${m.id}" cx="50%" cy="30%" r="70%">
+          <stop offset="0%" stop-color="${mid}"/>
+          <stop offset="100%" stop-color="${dark}"/>
+        </radialGradient>
+      </defs>
+      <circle cx="50" cy="50" r="50" fill="url(#g${m.id})"/>
+      ${bgPattern}
+      <text x="50" y="58" text-anchor="middle" font-size="32" font-weight="700" fill="#fff" font-family="serif" style="text-shadow:0 1px 2px rgba(0,0,0,0.3)">${initial}</text>
+      ${genText}
+    </svg>
+  `;
+  return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg.trim());
+}
+// 初始化：为所有成员生成默认头像（已有 avatarUrl 的跳过）
+mockMembers.forEach(m => {
+  if (!m.avatarUrl) m.avatarUrl = makeDefaultAvatar(m);
+});
 
 /** 模拟配偶关系 */
 const mockSpouses = [
@@ -1212,45 +1841,55 @@ function buildForestData() {
 
 // 创建单个节点
 function makeNode(m, extra = {}) {
+  // 节点仅展示姓名
   let label = m.name;
-  if (m.generationName) label += '\n(' + m.generationName + '字辈)';
-  label += '\n' + getAgeText(m);
 
   const isHighlighted = highlightIds.has(m.id);
-  // 关系路径上的节点用金黄色高亮
   const maleColor = isHighlighted ? '#E8A820' : '#C4944A';
   const femaleColor = isHighlighted ? '#E8A820' : '#C4736E';
   const maleBorder = isHighlighted ? '#C48800' : '#A67C3E';
   const femaleBorder = isHighlighted ? '#C48800' : '#A85E5A';
+  const bgColor = m.gender === 'M' ? maleColor : femaleColor;
 
   return {
     name: label,
     value: { id: m.id, gender: m.gender, gen: m.generationOrder },
     itemStyle: {
-      color: m.gender === 'M' ? maleColor : femaleColor,
+      color: bgColor,
       borderColor: m.gender === 'M' ? maleBorder : femaleBorder,
       borderWidth: isHighlighted ? 3 : 1,
-      borderRadius: 4,
+      borderRadius: 14,
       shadowBlur: isHighlighted ? 12 : 0,
       shadowColor: isHighlighted ? 'rgba(232,168,32,0.5)' : 'transparent',
     },
-    symbolSize: isHighlighted ? 16 : 14,
+    symbolSize: 8,
+    label: {
+      backgroundColor: bgColor,
+      borderColor: m.gender === 'M' ? maleBorder : femaleBorder,
+      borderWidth: isHighlighted ? 2 : 1,
+    },
     ...extra,
   };
 }
 
 function makeSpouseNode(spouse) {
   const isHighlighted = highlightIds.has(spouse.id);
+  const bgColor = isHighlighted ? '#F0D060' : '#E8D5D3';
   return {
-    name: '💍 ' + spouse.name + '\n' + getAgeText(spouse),
+    name: spouse.name,
     value: { id: spouse.id, gender: 'F', gen: spouse.generationOrder, isSpouse: true },
     itemStyle: {
-      color: isHighlighted ? '#F0D060' : '#E8D5D3',
+      color: bgColor,
       borderColor: isHighlighted ? '#C48800' : '#C4736E',
       borderWidth: isHighlighted ? 3 : 1,
-      borderRadius: 4,
+      borderRadius: 14,
     },
-    symbolSize: isHighlighted ? 12 : 8,
+    symbolSize: 8,
+    label: {
+      backgroundColor: bgColor,
+      borderColor: isHighlighted ? '#C48800' : '#C4736E',
+      borderWidth: isHighlighted ? 2 : 1,
+    },
     collapsed: true,
   };
 }
@@ -1341,19 +1980,25 @@ function renderTree() {
       bottom: '5%',
       right: '10%',
       label: {
-        position: treeOrientVal === 'TB' ? 'top' : 'left',
+        position: 'inside',
         verticalAlign: 'middle',
-        align: treeOrientVal === 'TB' ? 'center' : 'right',
+        align: 'center',
         fontSize: 12,
-        lineHeight: 18,
-        color: '#2D2318',
-        formatter: function(p) { return p.name; }
+        fontWeight: 600,
+        color: '#FFFFFF',
+        padding: [6, 12],
+        borderRadius: 14,
+        backgroundColor: '#00000000',
+        formatter: function(p) {
+          // 只取第一行（姓名），避免关系标签污染
+          return (p.name || '').split('\n')[0];
+        }
       },
       leaves: {
         label: {
-          position: treeOrientVal === 'TB' ? 'bottom' : 'right',
+          position: 'inside',
           verticalAlign: 'middle',
-          align: treeOrientVal === 'TB' ? 'center' : 'left',
+          align: 'center',
         }
       },
       lineStyle: {
@@ -1361,13 +2006,18 @@ function renderTree() {
         width: 2,
         curveness: 0.5,
       },
-      symbol: 'roundRect',
-      symbolSize: [14, 10],
-      itemStyle: { borderWidth: 1 },
+      symbol: 'emptyCircle',
+      symbolSize: 8,
+      itemStyle: {
+        borderWidth: 1,
+      },
       emphasis: {
         focus: 'descendant',
         lineStyle: { color: '#B8860B', width: 3 },
-        itemStyle: { shadowBlur: 10, shadowColor: 'rgba(184,134,11,0.3)' },
+        itemStyle: {
+          shadowBlur: 12,
+          shadowColor: 'rgba(184,134,11,0.4)',
+        },
       },
     }]
   };
@@ -1600,15 +2250,15 @@ function renderMemberList(filterText = '') {
     const activeClass = selectedMemberId === m.id ? ' active' : '';
     const genderClass = m.gender === 'M' ? 'male' : 'female';
     const initial = m.name.charAt(m.name.length - 1);
+    const avatarHtml = m.avatarUrl ? `<img src="${m.avatarUrl}" alt="${m.name}"/>` : initial;
     html += `
       <div class="member-item${activeClass}" onclick="selectMember(${m.id})">
-        <div class="avatar ${genderClass}">${initial}</div>
+        <div class="avatar ${genderClass}">${avatarHtml}</div>
         <div class="info">
           <div class="name">${m.name}</div>
           <div class="meta">${getAgeText(m)} · ${m.birthPlace||'未知'}</div>
         </div>
         <span class="gen-badge">第${m.generationOrder}代</span>
-        <button class="item-del" title="删除" onclick="event.stopPropagation();selectMember(${m.id});confirmDeleteMember()">×</button>
       </div>`;
   }
 
@@ -1659,32 +2309,125 @@ function selectMember(id, opts = {}) {
   // 渲染详情
   const spouse = getSpouse(id);
   const children = getChildren(id);
+  const father = m.fatherId ? getMember(m.fatherId) : null;
+  const mother = m.motherId ? getMember(m.motherId) : null;
   const genderClass = m.gender === 'M' ? 'male' : 'female';
   const initial = m.name.charAt(m.name.length - 1);
+  const avatarHtml = m.avatarUrl
+    ? `<img src="${escapeAttr(m.avatarUrl)}" alt="${escapeAttr(m.name)}" onerror="this.style.display='none';this.parentElement.innerHTML='${initial}';">`
+    : initial;
 
   const genNames = ['','始祖','第二代','第三代','第四代','第五代','第六代','第七代'];
 
+  let parentsHtml = '';
+  if (father || mother) {
+    let parentLinks = [];
+    if (father) parentLinks.push(`<a href="javascript:selectMember(${father.id})" style="color:var(--gold);text-decoration:none;">${father.name}</a>`);
+    if (mother) parentLinks.push(`<a href="javascript:selectMember(${mother.id})" style="color:var(--rose);text-decoration:none;">${mother.name}</a>`);
+    parentsHtml = `<div class="field"><span class="label">父母</span><span class="value">${parentLinks.join('、')}</span></div>`;
+  }
+
   let html = `
-    <div class="big-avatar ${genderClass}">${initial}</div>
+    <div class="big-avatar ${genderClass}" onclick="showProfileDialog(${m.id})" title="点击查看详情">${avatarHtml}</div>
     <div class="field"><span class="label">姓名</span><span class="value">${m.name}</span></div>
     ${m.generationName ? `<div class="field"><span class="label">字辈</span><span class="value">${m.generationName}字辈</span></div>` : ''}
-    <div class="field"><span class="label">性别</span><span class="value">${m.gender === 'M' ? '男' : '女'}</span></div>
-    <div class="field"><span class="label">代数</span><span class="value">${genNames[m.generationOrder] || '第' + m.generationOrder + '代'}</span></div>
-    <div class="field"><span class="label">生卒</span><span class="value">${getAgeText(m)}</span></div>
-    <div class="field"><span class="label">状态</span><span class="value">${m.isAlive ? '🏵️ 在世' : '🕯️ 已故'}</span></div>
-    ${m.birthPlace ? `<div class="field"><span class="label">出生地</span><span class="value">${m.birthPlace}</span></div>` : ''}
-    ${m.fatherId ? `<div class="field"><span class="label">父亲</span><span class="value"><a href="javascript:selectMember(${m.fatherId})" style="color:var(--gold);text-decoration:none;">${getMember(m.fatherId)?.name||'未知'}</a></span></div>` : '<div class="field"><span class="label">父亲</span><span class="value">— （始祖）</span></div>'}
-    ${m.motherId ? `<div class="field"><span class="label">母亲</span><span class="value"><a href="javascript:selectMember(${m.motherId})" style="color:var(--gold);text-decoration:none;">${getMember(m.motherId)?.name||'未知'}</a></span></div>` : ''}
+    ${parentsHtml}
     ${spouse ? `<div class="field"><span class="label">配偶</span><span class="value"><a href="javascript:selectMember(${spouse.id})" style="color:var(--rose);text-decoration:none;">${spouse.name}</a></span></div>` : ''}
     ${children.length > 0 ? `<div class="field"><span class="label">子女</span><span class="value">${children.map(c => `<a href="javascript:selectMember(${c.id})" style="color:var(--gold);text-decoration:none;">${c.name}</a>`).join('、')}</span></div>` : ''}
   `;
 
+  document.getElementById('detailBody').innerHTML = html;
+  
+  // 根据权限控制管理操作按钮的显示
+  const actions = document.getElementById('detailActions');
+  const toggle = document.getElementById('manageToggle');
+  if (canManageMember(id)) {
+    actions.style.display = 'flex';
+    actions.classList.remove('managing');
+    if (toggle) { toggle.classList.remove('active'); toggle.textContent = '⚙ 管理操作'; }
+  } else {
+    actions.style.display = 'none';
+  }
+}
+
+// ---------- 成员操作管理模式 ----------
+function toggleDetailManage() {
+  const actions = document.getElementById('detailActions');
+  const toggle = document.getElementById('manageToggle');
+  if (!actions || !toggle) return;
+  const managing = actions.classList.toggle('managing');
+  if (managing) {
+    toggle.textContent = '✕ 收起';
+    toggle.classList.add('active');
+  } else {
+    toggle.textContent = '⚙ 管理操作';
+    toggle.classList.remove('active');
+  }
+}
+
+// ---------- 成员详情弹窗 ----------
+function showProfileDialog(id) {
+  const m = getMember(id);
+  if (!m) return;
+  const spouse = getSpouse(id);
+  const children = getChildren(id);
+  const father = m.fatherId ? getMember(m.fatherId) : null;
+  const mother = m.motherId ? getMember(m.motherId) : null;
+  const genderClass = m.gender === 'M' ? 'male' : 'female';
+  const initial = m.name.charAt(m.name.length - 1);
+  const genNames = ['','始祖','第二代','第三代','第四代','第五代','第六代','第七代','第八代','第九代'];
+
+  // 头像
+  const avatarHtml = m.avatarUrl
+    ? `<img src="${escapeAttr(m.avatarUrl)}" alt="${escapeAttr(m.name)}" onerror="this.style.display='none';this.parentElement.innerHTML='${initial}';">`
+    : initial;
+  document.getElementById('profileAvatar').className = `profile-avatar ${genderClass}`;
+  document.getElementById('profileAvatar').innerHTML = avatarHtml;
+
+  // 姓名 + 标签
+  document.getElementById('profileName').textContent = m.name;
+  const tags = [];
+  tags.push(`<span class="tag">${m.gender === 'M' ? '♂ 男' : '♀ 女'}</span>`);
+  tags.push(`<span class="tag">${genNames[m.generationOrder] || '第' + m.generationOrder + '代'}</span>`);
+  if (m.generationName) tags.push(`<span class="tag">${m.generationName}字辈</span>`);
+  tags.push(`<span class="tag">${m.isAlive ? '🏵️ 在世' : '🕯️ 已故'}</span>`);
+  document.getElementById('profileSub').innerHTML = tags.join('');
+
+  // 详情正文
+  const fmtDate = d => d ? d.replace(/-/g, '年').replace(/-/, '月') + '日' : '—';
+  let body = '';
+
+  // 基本信息
+  body += `<div class="profile-section"><div class="profile-section-title">📋 基本信息</div><div class="profile-grid">`;
+  body += `<div class="profile-item"><span class="pi-label">姓名</span><span class="pi-value">${escapeHtml(m.name)}</span></div>`;
+  body += `<div class="profile-item"><span class="pi-label">字辈</span><span class="pi-value">${m.generationName ? escapeHtml(m.generationName) + '字辈' : '—'}</span></div>`;
+  body += `<div class="profile-item"><span class="pi-label">性别</span><span class="pi-value">${m.gender === 'M' ? '男' : '女'}</span></div>`;
+  body += `<div class="profile-item"><span class="pi-label">代数</span><span class="pi-value">${genNames[m.generationOrder] || '第' + m.generationOrder + '代'}</span></div>`;
+  body += `<div class="profile-item"><span class="pi-label">出生日期</span><span class="pi-value">${fmtDate(m.birthDate)}</span></div>`;
+  body += `<div class="profile-item"><span class="pi-label">逝世日期</span><span class="pi-value">${m.deathDate ? fmtDate(m.deathDate) : '—'}</span></div>`;
+  body += `<div class="profile-item"><span class="pi-label">出生地</span><span class="pi-value">${escapeHtml(m.birthPlace) || '—'}</span></div>`;
+  body += `<div class="profile-item"><span class="pi-label">状态</span><span class="pi-value">${m.isAlive ? '🏵️ 在世' : '🕯️ 已故'}</span></div>`;
+  body += `</div></div>`;
+
+  // 家族关系
+  body += `<div class="profile-section"><div class="profile-section-title">👥 家族关系</div><div class="profile-grid">`;
+  body += `<div class="profile-item"><span class="pi-label">父亲</span><span class="pi-value">${father ? `<a href="javascript:closeProfileDialog();selectMember(${father.id});showProfileDialog(${father.id})">${escapeHtml(father.name)}</a>` : '— （始祖）'}</span></div>`;
+  body += `<div class="profile-item"><span class="pi-label">母亲</span><span class="pi-value">${mother ? `<a href="javascript:closeProfileDialog();selectMember(${mother.id});showProfileDialog(${mother.id})">${escapeHtml(mother.name)}</a>` : '—'}</span></div>`;
+  body += `<div class="profile-item"><span class="pi-label">配偶</span><span class="pi-value">${spouse ? `<a href="javascript:closeProfileDialog();selectMember(${spouse.id});showProfileDialog(${spouse.id})">${escapeHtml(spouse.name)}</a>` : '—'}</span></div>`;
+  body += `<div class="profile-item"><span class="pi-label">子女 (${children.length})</span><span class="pi-value">${children.length > 0 ? children.map(c => `<a href="javascript:closeProfileDialog();selectMember(${c.id});showProfileDialog(${c.id})">${escapeHtml(c.name)}</a>`).join('、') : '—'}</span></div>`;
+  body += `</div></div>`;
+
+  // 生平简介
   if (m.biography) {
-    html += `<div class="bio">📜 ${m.biography}</div>`;
+    body += `<div class="profile-section"><div class="profile-section-title">📜 生平简介</div><div class="profile-bio">${escapeHtml(m.biography)}</div></div>`;
   }
 
-  document.getElementById('detailBody').innerHTML = html;
-  document.getElementById('detailActions').style.display = 'flex';
+  document.getElementById('profileBody').innerHTML = body;
+  document.getElementById('profileOverlay').classList.add('show');
+}
+
+function closeProfileDialog() {
+  document.getElementById('profileOverlay').classList.remove('show');
 }
 
 function clearDetail() {
@@ -1949,7 +2692,8 @@ function openAddModal() {
   prefilledFatherId = null;
   addingSpouseForId = null;
   document.getElementById('formGender').disabled = false;
-  document.getElementById('formFather').closest('.form-row').style.display = '';
+  document.getElementById('fatherSelect').closest('.form-row').style.display = '';
+  document.getElementById('childrenEditor').style.display = '';
   document.getElementById('modalTitle').textContent = '添加成员';
   document.getElementById('modalConfirm').textContent = '确认添加';
   clearForm();
@@ -1966,7 +2710,8 @@ function openAddChildModal() {
   addingSpouseForId = null;
   prefilledFatherId = parent.gender === 'M' ? selectedMemberId : null;
   document.getElementById('formGender').disabled = false;
-  document.getElementById('formFather').closest('.form-row').style.display = '';
+  document.getElementById('fatherSelect').closest('.form-row').style.display = '';
+  document.getElementById('childrenEditor').style.display = 'none';
   document.getElementById('modalTitle').textContent = parent.gender === 'M'
     ? `添加「${parent.name}」的子女`
     : `添加子女（母亲：${parent.name}）`;
@@ -1975,13 +2720,13 @@ function openAddChildModal() {
   populateParentSelects();
 
   if (parent.gender === 'M') {
-    document.getElementById('formFather').value = parent.id;
+    setParentSelect('fatherSelect', 'formFather', 'formFatherHidden', parent.id);
   } else {
     const spouse = getSpouse(parent.id);
     if (spouse && spouse.gender === 'M') {
-      document.getElementById('formFather').value = spouse.id;
+      setParentSelect('fatherSelect', 'formFather', 'formFatherHidden', spouse.id);
     }
-    document.getElementById('formMother').value = parent.id;
+    setParentSelect('motherSelect', 'formMother', 'formMotherHidden', parent.id);
   }
 
   // 预填出生地
@@ -2010,7 +2755,8 @@ function openAddSpouseModal() {
 
   document.getElementById('formGender').value = member.gender === 'M' ? 'F' : 'M';
   document.getElementById('formGender').disabled = true;
-  document.getElementById('formFather').closest('.form-row').style.display = 'none';
+  document.getElementById('fatherSelect').closest('.form-row').style.display = 'none';
+  document.getElementById('childrenEditor').style.display = 'none';
 
   document.getElementById('modalOverlay').classList.add('show');
 }
@@ -2024,7 +2770,8 @@ function editMember() {
   addingSpouseForId = null;
   // 恢复表单默认状态
   document.getElementById('formGender').disabled = false;
-  document.getElementById('formFather').closest('.form-row').style.display = '';
+  document.getElementById('fatherSelect').closest('.form-row').style.display = '';
+  document.getElementById('childrenEditor').style.display = '';
 
   document.getElementById('modalTitle').textContent = '编辑成员：' + m.name;
   document.getElementById('modalConfirm').textContent = '保存修改';
@@ -2036,10 +2783,17 @@ function editMember() {
   document.getElementById('formBirth').value = m.birthDate || '';
   document.getElementById('formAlive').value = m.isAlive ? '1' : '0';
   document.getElementById('formDeath').value = m.deathDate || '';
-  document.getElementById('formFather').value = m.fatherId || '';
-  document.getElementById('formMother').value = m.motherId || '';
+  setParentSelect('fatherSelect', 'formFather', 'formFatherHidden', m.fatherId);
+  setParentSelect('motherSelect', 'formMother', 'formMotherHidden', m.motherId);
   document.getElementById('formBirthplace').value = m.birthPlace || '';
   document.getElementById('formBio').value = m.biography || '';
+
+  // 加载当前头像到预览
+  avatarState = 'unchanged'; // 编辑时重置状态，只有用户重新操作才会修改
+  updateAvatarPreview(m.avatarUrl || null, m.gender);
+
+  // 加载子女列表
+  loadChildrenForEditor(m.id);
 
   document.getElementById('modalOverlay').classList.add('show');
 }
@@ -2055,11 +2809,18 @@ function saveMember() {
     birthDate: document.getElementById('formBirth').value || null,
     isAlive: parseInt(document.getElementById('formAlive').value),
     deathDate: document.getElementById('formDeath').value || null,
-    fatherId: document.getElementById('formFather').value ? parseInt(document.getElementById('formFather').value) : null,
-    motherId: document.getElementById('formMother').value ? parseInt(document.getElementById('formMother').value) : null,
+    fatherId: getFormFatherId(),
+    motherId: getFormMotherId(),
     birthPlace: document.getElementById('formBirthplace').value.trim(),
     biography: document.getElementById('formBio').value.trim(),
   };
+
+  // 处理头像：根据 avatarState 决定保存逻辑
+  if (avatarState === 'removed') {
+    data.avatarUrl = makeDefaultAvatar(Object.assign({}, getMember(currentEditId) || {}, data));
+  } else if (avatarState !== 'unchanged') {
+    data.avatarUrl = avatarState; // 新上传的 Data URL
+  }
 
   if (currentEditId) {
     // 编辑模式
@@ -2067,6 +2828,12 @@ function saveMember() {
     if (m) {
       Object.assign(m, data);
       m.generationOrder = calcGeneration(m);
+      // 同步子女关系
+      syncChildrenRelations(m.id);
+      // 如果头像被移除，重新生成默认头像
+      if (avatarState === 'removed') {
+        m.avatarUrl = makeDefaultAvatar(m);
+      }
     }
   } else if (addingSpouseForId) {
     // 添加配偶模式
@@ -2118,6 +2885,66 @@ function calcGeneration(m) {
   return 1;
 }
 
+// ====================================================================
+//  头像上传
+// ====================================================================
+// avatarState: 'unchanged' = 未修改 | 'removed' = 已移除 | 'data:image/...' = 新上传
+let avatarState = 'unchanged';
+
+function updateAvatarPreview(avatarUrl, gender) {
+  const preview = document.getElementById('formAvatarPreview');
+  const resetBtn = document.getElementById('formAvatarReset');
+  if (!preview) return;
+  preview.className = 'preview ' + (gender === 'F' ? 'female' : 'male');
+  if (avatarUrl) {
+    preview.innerHTML = `<img src="${avatarUrl}" alt="头像"/>`;
+    if (resetBtn) resetBtn.style.display = '';
+  } else {
+    // 显示默认占位（姓氏末字或"图"）
+    const nameEl = document.getElementById('formName');
+    const name = nameEl ? nameEl.value.trim() : '';
+    const initial = name ? name.charAt(name.length - 1) : '图';
+    preview.innerHTML = initial;
+    if (resetBtn) resetBtn.style.display = 'none';
+  }
+}
+
+function handleAvatarUpload(event) {
+  const file = event.target.files && event.target.files[0];
+  if (!file) return;
+  // 校验类型
+  if (!/^image\//.test(file.type)) {
+    alert('请选择图片文件');
+    event.target.value = '';
+    return;
+  }
+  // 校验大小（限制 2MB）
+  if (file.size > 2 * 1024 * 1024) {
+    alert('图片大小不能超过 2MB');
+    event.target.value = '';
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    avatarState = e.target.result; // 新上传的 Data URL
+    const gender = document.getElementById('formGender').value;
+    updateAvatarPreview(avatarState, gender);
+  };
+  reader.onerror = function() {
+    alert('图片读取失败，请重试');
+  };
+  reader.readAsDataURL(file);
+  // 清空 input，方便再次选择同一文件
+  event.target.value = '';
+}
+
+function resetAvatar() {
+  avatarState = 'removed';
+  const gender = document.getElementById('formGender').value;
+  updateAvatarPreview(null, gender);
+}
+
+// ====================================================================
 function clearForm() {
   document.getElementById('formName').value = '';
   document.getElementById('formGender').value = 'M';
@@ -2125,24 +2952,291 @@ function clearForm() {
   document.getElementById('formBirth').value = '';
   document.getElementById('formAlive').value = '1';
   document.getElementById('formDeath').value = '';
-  document.getElementById('formFather').value = '';
-  document.getElementById('formMother').value = '';
   document.getElementById('formBirthplace').value = '';
   document.getElementById('formBio').value = '';
+  // 清空父母选择器
+  setParentSelect('fatherSelect', 'formFather', 'formFatherHidden', null);
+  setParentSelect('motherSelect', 'formMother', 'formMotherHidden', null);
+  // 清空子女编辑器
+  initChildrenEditor();
+  // 清空头像
+  avatarState = 'unchanged';
+  updateAvatarPreview(null, 'M');
 }
 
 function populateParentSelects() {
-  const fatherSel = document.getElementById('formFather');
-  const motherSel = document.getElementById('formMother');
+  // 已替换为可搜索选择器，此函数保留兼容
+}
 
-  const males = mockMembers.filter(m => m.gender === 'M').sort((a,b) => a.generationOrder - b.generationOrder);
-  const females = mockMembers.filter(m => m.gender === 'F').sort((a,b) => a.generationOrder - b.generationOrder);
+// ====================================================================
+//  可搜索选择器
+// ====================================================================
+function showSearchDropdown(containerId, genderFilter, hiddenId) {
+  const container = document.getElementById(containerId);
+  const dropdown = document.getElementById(containerId + 'Dropdown');
+  if (!container || !dropdown) return;
+  
+  const keyword = document.getElementById(containerId === 'fatherSelect' ? 'formFather' : 'formMother').value.trim();
+  renderSearchDropdown(containerId, dropdown, keyword, genderFilter, hiddenId);
+  dropdown.classList.add('show');
+}
 
-  fatherSel.innerHTML = '<option value="">无（始祖）</option>' +
-    males.map(m => `<option value="${m.id}">${m.name}（第${m.generationOrder}代）</option>`).join('');
+function filterSearchDropdown(containerId, keyword, genderFilter, hiddenId) {
+  const dropdown = document.getElementById(containerId + 'Dropdown');
+  if (!dropdown) return;
+  keyword = keyword.trim();
+  renderSearchDropdown(containerId, dropdown, keyword, genderFilter, hiddenId);
+  dropdown.classList.add('show');
+}
 
-  motherSel.innerHTML = '<option value="">无</option>' +
-    females.map(m => `<option value="${m.id}">${m.name}（第${m.generationOrder}代）</option>`).join('');
+function renderSearchDropdown(containerId, dropdown, keyword, genderFilter, hiddenId) {
+  let list = mockMembers.filter(m => !genderFilter || m.gender === genderFilter);
+  
+  // 排除当前编辑的成员自己
+  if (currentEditId) {
+    list = list.filter(m => m.id !== currentEditId);
+  }
+  
+  if (keyword) {
+    list = list.filter(m => m.name.includes(keyword));
+  }
+  
+  list.sort((a, b) => a.generationOrder - b.generationOrder);
+  
+  const hiddenVal = document.getElementById(hiddenId).value;
+  
+  if (list.length === 0) {
+    dropdown.innerHTML = '<div class="ss-empty">无匹配成员</div>';
+    return;
+  }
+  
+  dropdown.innerHTML = list.map(m => `
+    <div class="ss-option" onclick="selectSearchOption('${containerId}', '${hiddenId}', ${m.id}, '${escapeAttr(m.name)}')">
+      <span>${m.name}</span>
+      <span class="ss-gen">第${m.generationOrder}代</span>
+    </div>
+  `).join('');
+}
+
+function selectSearchOption(containerId, hiddenId, id, name) {
+  const hidden = document.getElementById(hiddenId);
+  const inputId = containerId === 'fatherSelect' ? 'formFather' : 'formMother';
+  const input = document.getElementById(inputId);
+  const container = document.getElementById(containerId);
+  if (hidden) hidden.value = id;
+  if (input) input.value = name;
+  if (container) container.classList.add('has-value');
+  const dropdown = document.getElementById(containerId + 'Dropdown');
+  if (dropdown) dropdown.classList.remove('show');
+}
+
+function clearSearchSelect(containerId, inputId, hiddenId) {
+  event.stopPropagation();
+  const input = document.getElementById(inputId);
+  const hidden = document.getElementById(hiddenId);
+  const container = document.getElementById(containerId);
+  if (input) input.value = '';
+  if (hidden) hidden.value = '';
+  if (container) container.classList.remove('has-value');
+  input.focus();
+}
+
+// 点击页面其他地方关闭下拉
+document.addEventListener('click', function(e) {
+  const selects = document.querySelectorAll('.searchable-select');
+  selects.forEach(s => {
+    if (!s.contains(e.target)) {
+      const dd = s.querySelector('.ss-dropdown');
+      if (dd) dd.classList.remove('show');
+    }
+  });
+});
+
+// 从表单获取父亲 ID
+function getFormFatherId() {
+  const hidden = document.getElementById('formFatherHidden');
+  if (hidden) return hidden.value ? parseInt(hidden.value) : null;
+  return null;
+}
+function getFormMotherId() {
+  const hidden = document.getElementById('formMotherHidden');
+  if (hidden) return hidden.value ? parseInt(hidden.value) : null;
+  return null;
+}
+
+// 设置父亲/母亲选择器的值
+function setParentSelect(containerId, inputId, hiddenId, memberId) {
+  const container = document.getElementById(containerId);
+  const input = document.getElementById(inputId);
+  const hidden = document.getElementById(hiddenId);
+  if (!memberId) {
+    if (input) input.value = '';
+    if (hidden) hidden.value = '';
+    if (container) container.classList.remove('has-value');
+    return;
+  }
+  const m = getMember(memberId);
+  if (m) {
+    if (input) input.value = m.name;
+    if (hidden) hidden.value = m.id;
+    if (container) container.classList.add('has-value');
+  }
+}
+
+// ====================================================================
+//  子女编辑器
+// ====================================================================
+let editingChildrenIds = []; // 暂存编辑中的子女 ID 列表
+
+function initChildrenEditor() {
+  editingChildrenIds = [];
+  renderChildrenList();
+}
+
+function loadChildrenForEditor(memberId) {
+  const children = getChildren(memberId);
+  editingChildrenIds = children.map(c => c.id);
+  renderChildrenList();
+}
+
+function renderChildrenList() {
+  const listEl = document.getElementById('ceList');
+  if (!listEl) return;
+  
+  if (editingChildrenIds.length === 0) {
+    listEl.innerHTML = '<span style="font-size:12px;color:var(--ink-light);padding:4px 8px;">暂无子女，在下方搜索添加</span>';
+    return;
+  }
+  
+  listEl.innerHTML = editingChildrenIds.map(id => {
+    const c = getMember(id);
+    if (!c) return '';
+    const genderClass = c.gender === 'M' ? 'male' : 'female';
+    const genderText = c.gender === 'M' ? '子' : '女';
+    return `
+      <span class="ce-tag ${genderClass}">
+        ${c.name}（${genderText}）
+        <button class="ce-remove" onclick="removeChildFromEditor(${id})">✕</button>
+      </span>
+    `;
+  }).join('');
+}
+
+function removeChildFromEditor(id) {
+  event.stopPropagation();
+  editingChildrenIds = editingChildrenIds.filter(cid => cid !== id);
+  renderChildrenList();
+}
+
+function showChildDropdown() {
+  const dropdown = document.getElementById('childDropdown');
+  const input = document.getElementById('ceSearchInput');
+  if (!dropdown || !input) return;
+  const keyword = input.value.trim();
+  renderChildDropdown(keyword);
+  dropdown.classList.add('show');
+}
+
+function filterChildDropdown(keyword) {
+  const dropdown = document.getElementById('childDropdown');
+  if (!dropdown) return;
+  keyword = keyword.trim();
+  renderChildDropdown(keyword);
+  dropdown.classList.add('show');
+}
+
+function renderChildDropdown(keyword) {
+  const dropdown = document.getElementById('childDropdown');
+  if (!dropdown) return;
+  
+  let list = mockMembers.slice();
+  
+  // 排除已经添加的子女
+  list = list.filter(m => !editingChildrenIds.includes(m.id));
+  // 排除当前编辑的成员自己
+  if (currentEditId) {
+    list = list.filter(m => m.id !== currentEditId);
+  }
+  // 排除配偶（不能添加配偶为子女）
+  const spouse = getSpouse(currentEditId);
+  if (spouse) {
+    list = list.filter(m => m.id !== spouse.id);
+  }
+  
+  if (keyword) {
+    list = list.filter(m => m.name.includes(keyword));
+  }
+  
+  list.sort((a, b) => a.generationOrder - b.generationOrder);
+  
+  if (list.length === 0) {
+    dropdown.innerHTML = '<div class="ss-empty">无匹配成员</div>';
+    return;
+  }
+  
+  dropdown.innerHTML = list.map(m => `
+    <div class="ss-option" onclick="addChildToEditor(${m.id})">
+      <span>${m.name}${m.gender === 'M' ? '（子）' : '（女）'}</span>
+      <span class="ss-gen">第${m.generationOrder}代</span>
+    </div>
+  `).join('');
+}
+
+function addChildToEditor(id) {
+  if (!editingChildrenIds.includes(id)) {
+    editingChildrenIds.push(id);
+    renderChildrenList();
+  }
+  const input = document.getElementById('ceSearchInput');
+  const dropdown = document.getElementById('childDropdown');
+  if (input) input.value = '';
+  if (dropdown) dropdown.classList.remove('show');
+}
+
+function clearChildSearch() {
+  event.stopPropagation();
+  const input = document.getElementById('ceSearchInput');
+  if (input) input.value = '';
+  input.focus();
+}
+
+// 保存时同步子女关系
+function syncChildrenRelations(memberId) {
+  const member = getMember(memberId);
+  if (!member) return;
+  
+  const isMale = member.gender === 'M';
+  const oldChildren = getChildren(memberId);
+  const oldChildIds = oldChildren.map(c => c.id);
+  const newChildIds = editingChildrenIds.slice();
+  
+  // 添加新增的子女关系
+  newChildIds.forEach(cid => {
+    if (!oldChildIds.includes(cid)) {
+      const child = getMember(cid);
+      if (child) {
+        if (isMale) {
+          child.fatherId = memberId;
+        } else {
+          child.motherId = memberId;
+        }
+      }
+    }
+  });
+  
+  // 移除被删除的子女关系
+  oldChildIds.forEach(cid => {
+    if (!newChildIds.includes(cid)) {
+      const child = getMember(cid);
+      if (child) {
+        if (isMale) {
+          child.fatherId = null;
+        } else {
+          child.motherId = null;
+        }
+      }
+    }
+  });
 }
 
 function closeModal() {
@@ -2152,7 +3246,8 @@ function closeModal() {
   addingSpouseForId = null;
   // 恢复表单默认状态
   document.getElementById('formGender').disabled = false;
-  document.getElementById('formFather').closest('.form-row').style.display = '';
+  document.getElementById('fatherSelect').closest('.form-row').style.display = '';
+  document.getElementById('childrenEditor').style.display = '';
 }
 
 // ====================================================================
@@ -2279,13 +3374,15 @@ function switchView(view) {
 }
 
 function showRulesView() {
+  ruleManageMode = false;
   const main = document.getElementById('mainContent');
   let html = `
-    <div style="flex:1;padding:32px;max-width:800px;margin:0 auto;overflow-y:auto;">
+    <div id="rulesContainer" style="flex:1;padding:32px;max-width:800px;margin:0 auto;overflow-y:auto;">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
         <h2 style="margin:0;">📜 张氏族规家训</h2>
-        <button class="add-rule-btn" onclick="showAddRuleForm()" style="margin:0;">＋ 新增族规</button>
+        <button class="manage-rule-btn" id="manageRuleBtn" onclick="toggleRuleManage()">⚙ 管理族规</button>
       </div>
+      <button class="add-rule-btn" onclick="showAddRuleForm()">＋ 新增族规</button>
       <!-- 新增表单区域 -->
       <div class="rule-edit-form" id="ruleAddForm">
         <input type="text" id="ruleAddTitle" placeholder="标题，如：族规·祭祀礼仪">
@@ -2331,6 +3428,26 @@ function showRulesView() {
   }
   html += '</div>';
   main.innerHTML = html;
+}
+
+// ---------- 管理族规模式 ----------
+let ruleManageMode = false;
+function toggleRuleManage() {
+  ruleManageMode = !ruleManageMode;
+  const container = document.getElementById('rulesContainer');
+  const btn = document.getElementById('manageRuleBtn');
+  if (!container || !btn) return;
+  if (ruleManageMode) {
+    container.classList.add('rules-managing');
+    btn.textContent = '✕ 退出管理';
+    btn.classList.add('active');
+  } else {
+    container.classList.remove('rules-managing');
+    btn.textContent = '⚙ 管理族规';
+    btn.classList.remove('active');
+    // 退出管理时关闭所有打开的编辑/新增表单
+    document.querySelectorAll('.rule-edit-form.active').forEach(f => f.classList.remove('active'));
+  }
 }
 
 function escapeHtml(s) {
@@ -2486,9 +3603,184 @@ function refreshAll() {
   if (selectedMemberId) selectMember(selectedMemberId);
 }
 
+// 当前登录用户 ID（默认第4代张志强）
+const currentUserId = 13;
+
+function getCurrentUser() {
+  return getMember(currentUserId);
+}
+
+function canManageMember(memberId) {
+  if (memberId === currentUserId) return true;
+  
+  const user = getCurrentUser();
+  if (!user) return false;
+  
+  // 检查是否是自己的配偶
+  const spouse = getSpouse(currentUserId);
+  if (spouse && spouse.id === memberId) return true;
+  
+  // 检查是否是自己的后代（以自己为根节点向下延伸的所有子节点）
+  const descendants = getAllDescendants(currentUserId);
+  if (descendants.some(d => d.id === memberId)) return true;
+  
+  // 如果登录者是外族配偶（没有父亲或母亲在族谱中），只能管理自己
+  if (!user.fatherId && !user.motherId) {
+    return memberId === currentUserId;
+  }
+  
+  return false;
+}
+
+function getAllDescendants(rootId) {
+  const result = [];
+  const children = getChildren(rootId);
+  
+  function collect(node) {
+    result.push(node);
+    const nodeChildren = getChildren(node.id);
+    nodeChildren.forEach(child => collect(child));
+  }
+  
+  children.forEach(child => collect(child));
+  return result;
+}
+
+function initHeaderUser() {
+  const user = getCurrentUser();
+  if (!user) return;
+  
+  const avatarEl = document.getElementById('headerAvatar');
+  const nameEl = document.getElementById('headerUserName');
+  const genEl = document.getElementById('headerUserGen');
+  
+  if (avatarEl) {
+    avatarEl.className = 'user-avatar ' + (user.gender === 'M' ? 'male' : 'female');
+    if (user.avatarUrl) {
+      avatarEl.innerHTML = `<img src="${user.avatarUrl}" alt="${user.name}"/>`;
+    } else {
+      const initial = user.name.charAt(user.name.length - 1);
+      avatarEl.textContent = initial;
+    }
+  }
+  if (nameEl) nameEl.textContent = user.name;
+  if (genEl) {
+    genEl.textContent = user.generationName ? `${user.generationName}字辈 · 第${user.generationOrder}代` : `第${user.generationOrder}代`;
+  }
+}
+
+function toggleUserPopover() {
+  const overlay = document.getElementById('userPopoverOverlay');
+  const popover = document.getElementById('userPopover');
+  if (!overlay || !popover) return;
+  
+  const isVisible = overlay.classList.contains('show');
+  if (isVisible) {
+    closeUserPopover();
+  } else {
+    openUserPopover();
+  }
+}
+
+function openUserPopover() {
+  const user = getCurrentUser();
+  if (!user) return;
+  
+  const overlay = document.getElementById('userPopoverOverlay');
+  const popover = document.getElementById('userPopover');
+  if (!overlay || !popover) return;
+  
+  // 更新弹窗内容
+  const avatarEl = document.getElementById('popoverAvatar');
+  const nameEl = document.getElementById('popoverName');
+  const genEl = document.getElementById('popoverGen');
+  const genderEl = document.getElementById('popoverGender');
+  const birthEl = document.getElementById('popoverBirth');
+  const spouseEl = document.getElementById('popoverSpouse');
+  const childrenEl = document.getElementById('popoverChildren');
+  
+  if (avatarEl) {
+    avatarEl.className = 'popover-avatar ' + (user.gender === 'M' ? 'male' : 'female');
+    if (user.avatarUrl) {
+      avatarEl.innerHTML = `<img src="${user.avatarUrl}" alt="${user.name}"/>`;
+    } else {
+      const initial = user.name.charAt(user.name.length - 1);
+      avatarEl.textContent = initial;
+    }
+  }
+  if (nameEl) nameEl.textContent = user.name;
+  if (genEl) {
+    genEl.textContent = user.generationName ? `${user.generationName}字辈 · 第${user.generationOrder}代` : `第${user.generationOrder}代`;
+  }
+  if (genderEl) genderEl.textContent = user.gender === 'M' ? '男' : '女';
+  if (birthEl) birthEl.textContent = user.birthDate || '未知';
+  
+  // 获取配偶信息
+  const spouses = mockSpouses.filter(s => s.husbandId === user.id || s.wifeId === user.id);
+  if (spouseEl) {
+    if (spouses.length > 0) {
+      const spouseId = spouses[0].husbandId === user.id ? spouses[0].wifeId : spouses[0].husbandId;
+      const spouse = getMember(spouseId);
+      spouseEl.innerHTML = spouse ? `<a href="javascript:selectMember(${spouse.id});closeUserPopover()" style="color:var(--rose);text-decoration:none;">${spouse.name}</a>` : '未知';
+    } else {
+      spouseEl.textContent = '无';
+    }
+  }
+  
+  // 获取子女信息
+  const children = mockMembers.filter(m => m.fatherId === user.id || m.motherId === user.id);
+  if (childrenEl) {
+    if (children.length > 0) {
+      childrenEl.innerHTML = children.map(c => 
+        `<a href="javascript:selectMember(${c.id});closeUserPopover()" style="color:var(--gold);text-decoration:none;">${c.name}</a>`
+      ).join('、');
+    } else {
+      childrenEl.textContent = '无';
+    }
+  }
+  
+  overlay.classList.add('show');
+  popover.style.display = 'block';
+}
+
+function closeUserPopover() {
+  const overlay = document.getElementById('userPopoverOverlay');
+  const popover = document.getElementById('userPopover');
+  if (overlay) overlay.classList.remove('show');
+  if (popover) popover.style.display = 'none';
+}
+
+function editCurrentUser() {
+  closeUserPopover();
+  selectedMemberId = currentUserId;
+  editMember();
+}
+
+function addChildForCurrentUser() {
+  closeUserPopover();
+  selectedMemberId = currentUserId;
+  openAddChildModal();
+}
+
+function addSpouseForCurrentUser() {
+  closeUserPopover();
+  selectedMemberId = currentUserId;
+  openAddSpouseModal();
+}
+
+// 点击其他地方关闭弹窗
+document.addEventListener('click', function(e) {
+  const userProfile = document.getElementById('headerUser');
+  const popover = document.getElementById('userPopover');
+  if (userProfile && popover && !userProfile.contains(e.target) && !popover.contains(e.target)) {
+    closeUserPopover();
+  }
+});
+
 function init() {
   initMemberMap();
   renderMemberList();
+  initHeaderUser();
 
   // 默认选中始祖，全族模式以始祖为根（必须在 initTreeChart 之前设置，确保首次渲染使用 buildFullTree）
   const root = findRootMembers()[0];
@@ -2513,5 +3805,29 @@ function init() {
 // 启动
 document.addEventListener('DOMContentLoaded', init);
 </script>
+
+<!-- ====== User Profile Popover ====== -->
+<div class="user-popover-overlay" id="userPopoverOverlay" onclick="closeUserPopover()"></div>
+<div class="user-popover" id="userPopover">
+  <div class="popover-header">
+    <div class="popover-avatar" id="popoverAvatar">图</div>
+    <div>
+      <div class="popover-name" id="popoverName">姓名</div>
+      <div class="popover-gen" id="popoverGen"></div>
+    </div>
+  </div>
+  <div class="popover-body" id="popoverBody">
+    <div class="popover-field"><span class="label">性别</span><span class="value" id="popoverGender"></span></div>
+    <div class="popover-field"><span class="label">生辰</span><span class="value" id="popoverBirth"></span></div>
+    <div class="popover-field"><span class="label">配偶</span><span class="value" id="popoverSpouse"></span></div>
+    <div class="popover-field"><span class="label">子女</span><span class="value" id="popoverChildren"></span></div>
+  </div>
+  <div class="popover-actions">
+    <button onclick="editCurrentUser()">✏️ 编辑</button>
+    <button class="primary" onclick="addChildForCurrentUser()">＋ 添加子女</button>
+    <button class="spouse" onclick="addSpouseForCurrentUser()">💍 添加配偶</button>
+  </div>
+</div>
+
 </body>
 </html>

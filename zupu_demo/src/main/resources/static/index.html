@@ -2030,10 +2030,16 @@ function renderTree() {
       const id = params.data.value.id;
       // 全族模式：点击树中节点
       if (treeViewMode === 'full') {
-        // 如果该节点有后代且尚未展开 → 展开下一层，不改变根节点
-        if (getChildren(id).length > 0 && !expandedIds.has(id)) {
-          expandedIds.add(id);
-          renderTree();
+        // expandedIds 仅用于截止线边界节点（maxGen 代）的"展开更多"逻辑；
+        // 截止线以内的节点交给 ECharts 自带的 expandAndCollapse 处理
+        const fm = getMember(id);
+        if (fm) {
+          const rootGen = fullRootId ? (getMember(fullRootId)?.generationOrder || 1) : 1;
+          const maxGen = rootGen + 4; // maxDepth=5，边界节点为第 rootGen+4 代
+          if (fm.generationOrder >= maxGen && getChildren(id).length > 0 && !expandedIds.has(id)) {
+            expandedIds.add(id);
+            renderTree();
+          }
         }
         selectMember(id, { changeRoot: false });
       } else {

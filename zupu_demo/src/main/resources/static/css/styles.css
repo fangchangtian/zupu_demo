@@ -212,6 +212,15 @@ body {
   color: #fff;
   border-color: var(--rose);
 }
+.user-popover .popover-actions button.logout {
+  color: var(--ink-light);
+  border-color: transparent;
+}
+.user-popover .popover-actions button.logout:hover {
+  background: #F5F0E8;
+  color: #C0392B;
+  border-color: #E0B4B0;
+}
 .header nav { display: flex; gap: 4px; }
 .header nav button {
   background: rgba(255,255,255,0.08);

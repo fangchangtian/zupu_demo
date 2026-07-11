@@ -245,7 +245,7 @@
 
 <!-- ====== User Profile Popover ====== -->
 <div class="user-popover-overlay" id="userPopoverOverlay" onclick="closeUserPopover()"></div>
-<div class="user-popover" id="userPopover">
+<div class="user-popover" id="userPopover" style="display:none">
   <div class="popover-header">
     <div class="popover-avatar" id="popoverAvatar">图</div>
     <div>
@@ -263,6 +263,7 @@
     <button onclick="editCurrentUser()">✏️ 编辑</button>
     <button class="primary" onclick="addChildForCurrentUser()">＋ 添加子女</button>
     <button class="spouse" onclick="addSpouseForCurrentUser()">💍 添加配偶</button>
+    <button class="logout" onclick="logout()">🚪 退出登录</button>
   </div>
 </div>
   <script src="js/data.js"></script>

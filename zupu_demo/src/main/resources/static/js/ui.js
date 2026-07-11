@@ -1133,8 +1133,8 @@ function refreshAll() {
   if (selectedMemberId) selectMember(selectedMemberId);
 }
 
-// 当前登录用户 ID（默认第4代张志强）
-const currentUserId = 13;
+// 当前登录用户（由登录页通过 URL hash 传入，默认张志强 id=13）
+let currentUserId = null;
 
 function getCurrentUser() {
   return getMember(currentUserId);
@@ -1298,6 +1298,12 @@ function addSpouseForCurrentUser() {
   openAddSpouseModal();
 }
 
+function logout() {
+  localStorage.removeItem('zupu_remember_user');
+  sessionStorage.clear();
+  window.location.replace(LOGIN_URL);
+}
+
 // 点击其他地方关闭弹窗
 document.addEventListener('click', function(e) {
   const userProfile = document.getElementById('headerUser');
@@ -1308,7 +1314,13 @@ document.addEventListener('click', function(e) {
 });
 
 function init() {
+  // 先建索引再解析登录身份（resolveCurrentUser 依赖 memberMap）
   initMemberMap();
+
+  // 从 URL hash 解析登录用户身份
+  const resolved = resolveCurrentUser();
+  if (!resolved) return; // 已跳转回登录页
+  currentUserId = resolved.id;
   renderMemberList();
   initHeaderUser();
 

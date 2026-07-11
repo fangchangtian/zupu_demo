@@ -168,6 +168,8 @@ const mockRules = [
 //  工具函数
 // ====================================================================
 
+const LOGIN_URL = 'login.html';
+
 const memberMap = new Map();
 let selectedMemberId = null;
 let currentEditId = null;
@@ -175,6 +177,23 @@ let addingSpouseForId = null;
 let prefilledFatherId = null;
 let treeOrientVal = 'TB';
 let treeChart = null;
+
+/** 从 URL hash 解析登录用户身份，未登录则跳回登录页 */
+function resolveCurrentUser() {
+  const hash = window.location.hash.replace(/^#/, '');
+  if (!hash) {
+    window.location.replace(LOGIN_URL);
+    return null;
+  }
+  const params = new URLSearchParams(hash);
+  const userId = parseInt(params.get('user'));
+  const name = decodeURIComponent(params.get('name') || '');
+  if (!userId || !name || !getMember(userId)) {
+    window.location.replace(LOGIN_URL);
+    return null;
+  }
+  return { id: userId, name };
+}
 
 function initMemberMap() {
   memberMap.clear();

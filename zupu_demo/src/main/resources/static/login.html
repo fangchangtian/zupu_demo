@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>族迹 · 登录</title>
+<link rel="stylesheet" href="css/login.css">
+</head>
+<body>
+
+<div class="login-wrapper">
+  <!-- 左侧品牌区 -->
+  <div class="brand-panel">
+    <div class="brand-content">
+      <div class="brand-icon">🌳</div>
+      <h1 class="brand-title">族 迹</h1>
+      <p class="brand-subtitle">电子族谱管理系统</p>
+      <p class="brand-desc">以树为脉，以谱为根<br>传承家族记忆，延续血脉温情</p>
+    </div>
+    <div class="brand-footer">© 2026 族迹 · 守护每一个家族的根</div>
+  </div>
+
+  <!-- 右侧登录区 -->
+  <div class="login-panel">
+    <div class="login-card">
+      <h2 class="login-title">欢迎回来</h2>
+      <p class="login-sub">登录你的家族账户</p>
+
+      <form id="loginForm" novalidate>
+        <!-- 账号 -->
+        <div class="form-group">
+          <label for="username">账号</label>
+          <div class="input-wrap">
+            <span class="input-icon">👤</span>
+            <input
+              type="text"
+              id="username"
+              placeholder="请输入手机号或邮箱"
+              autocomplete="username"
+              required
+            >
+          </div>
+          <span class="error-msg" id="usernameError"></span>
+        </div>
+
+        <!-- 密码 -->
+        <div class="form-group">
+          <label for="password">密码</label>
+          <div class="input-wrap">
+            <span class="input-icon">🔒</span>
+            <input
+              type="password"
+              id="password"
+              placeholder="请输入密码"
+              autocomplete="current-password"
+              required
+            >
+            <button type="button" class="toggle-pwd" id="togglePwd" title="显示密码">👁️</button>
+          </div>
+          <span class="error-msg" id="passwordError"></span>
+        </div>
+
+        <!-- 记住我 & 忘记密码 -->
+        <div class="form-row">
+          <label class="checkbox-label">
+            <input type="checkbox" id="rememberMe">
+            <span class="checkmark"></span>
+            记住我
+          </label>
+          <a href="#" class="forgot-link">忘记密码？</a>
+        </div>
+
+        <!-- 登录按钮 -->
+        <button type="submit" class="btn-login" id="loginBtn">
+          <span class="btn-text">登 录</span>
+          <span class="btn-spinner" id="loginSpinner"></span>
+        </button>
+      </form>
+
+      <!-- 分隔线 -->
+      <div class="divider">
+        <span>其他方式登录</span>
+      </div>
+
+      <!-- 第三方登录 -->
+      <div class="social-login">
+        <button class="social-btn wechat" title="微信登录">💬</button>
+        <button class="social-btn sms" title="短信验证码登录">📱</button>
+      </div>
+
+      <!-- 注册入口 -->
+      <p class="register-tip">
+        还没有家族账户？<a href="#">立即注册</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script src="js/login.js"></script>
+</body>
+</html>
